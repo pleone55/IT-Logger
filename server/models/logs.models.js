@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const LogSchema = new mongoose.Schema({
     tech: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'techs'
+        type: String,
+        required: true
     },
     description: {
         type: String,

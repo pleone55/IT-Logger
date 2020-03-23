@@ -1,8 +1,8 @@
 const { Log } = require('../models/logs.models');
 
 module.exports.createLog = (req, res) => {
-    const { description, attention } = req.body;
-    Log.create({ tech: req.tech.id, description, attention})
+    const { tech, description, attention } = req.body;
+    Log.create({ tech, description, attention })
         .then(log => res.json(log))
         .catch(err => res.status(400).json(err));
 }
@@ -11,6 +11,12 @@ module.exports.getLogs = (req, res) => {
     Log.find({})
         .then(log => res.json(log))
         .catch(err => res.status(500).json(err));
+}
+
+module.exports.getLogById = (req, res) => {
+    Log.findOne({ _id: req.params.id })
+        .then(log => res.json(log))
+        .catch(err => res.json(err))
 }
 
 module.exports.updateLog = (req, res) => {

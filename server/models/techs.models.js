@@ -14,7 +14,7 @@ const TechSchema = new mongoose.Schema({
             true,
             "Tech's last name is required"
         ]
-    }
+    },
 }, {timestamps: true});
 
 module.exports.Tech = mongoose.model('tech', TechSchema);

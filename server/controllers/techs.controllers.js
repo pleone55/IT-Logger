@@ -13,7 +13,7 @@ module.exports.getTechs = (req, res) => {
         .catch(err => res.json(err));
 }
 
-module.exports.updateTechs = (req, res) => {
+module.exports.updateTech = (req, res) => {
     Tech.findByIdAndUpdate({ _id: req.params.id}, req.body, {new: true})
         .then(tech => res.json(tech))
         .catch(err => res.json(err));
