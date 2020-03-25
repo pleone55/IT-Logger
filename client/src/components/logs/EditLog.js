@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { updateLog } from '../../actions/logActions';
 import M from 'materialize-css/dist/js/materialize.min.js';
 import axios from 'axios';
 
-const EditLog = props => {
-    const { id } = props;
+const EditLog = ({ current, updateLog }) => {
     const [description, setDescription] = useState('');
     const [attention, setAttention] = useState(false);
     const [tech, setTech] = useState('');
     const [techs, setTechs] = useState([]);
 
     useEffect(() => {
-        getTechs();
-        getTechById();
-        //eslint-disable-next-line
-    }, []);
+        if(current) {
+            setDescription(current.description);
+            setAttention(current.attention);
+            setTech(current.tech);
+            getTechs();
+        }
+    }, [current]);
 
     const getTechs = () => {
         axios.get('http://localhost:7000/api/techs')
@@ -22,26 +26,19 @@ const EditLog = props => {
             })
     }
 
-    const getTechById = id => {
-        axios.get('http://localhost:7000/api/logs/' + id)
-            .then(response => {
-                setDescription(response.data.description)
-                setTech(response.data.tech);
-                setAttention(response.data.attention);
-        })
-    };
-
     const onSubmit = e => {
         e.preventDefault();
         if(description === '' || tech === ''){
             M.toast({ html: 'Please enter a log and tech' });
         } else {
-            axios.put('http://localhost:7000/api/logs/' + id, {
+            const logUpdate = {
+                id: current._id,
                 description,
                 tech,
                 attention
-            })
-                .then(response => console.log(response.data));
+            };
+            updateLog(logUpdate);
+            M.toast({ html: `Log updated by ${tech}`});
 
             //Clear fields
             setDescription('');
@@ -62,7 +59,6 @@ const EditLog = props => {
                             value={description} 
                             onChange={e => setDescription(e.target.value)}
                         />
-                        <label htmlFor="description" className="active">Log Message</label>
                     </div>
                 </div>
                 <div className="row">
@@ -113,4 +109,8 @@ const modalStyle = {
     height: "75%"
 };
 
-export default EditLog;
+const mapStateToProps = state => ({
+    current: state.log.current
+})
+
+export default connect(mapStateToProps, { updateLog })(EditLog);

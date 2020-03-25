@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import M from 'materialize-css/dist/js/materialize.min.js';
+import { addLog } from '../../actions/logActions';
 import axios from 'axios';
 
-const AddLog = () => {
+const AddLog = ({ addLog }) => {
     const [description, setDescription] = useState('');
     const [attention, setAttention] = useState(false);
     const [tech, setTech] = useState('');
     const [techs, setTechs] = useState([]);
-    // const [errors, setErrors] = useState([]);
 
     useEffect(() => {
         getTechs();
@@ -26,16 +27,13 @@ const AddLog = () => {
         if(description === '' || tech === ''){
             M.toast({ html: 'Please enter a log and tech' });
         } else {
-            axios.post('http://localhost:7000/api/logs', {
-                tech,
+            const newLog = {
                 description,
-                attention
-            })
-                .then(response => {
-                    setDescription(response.data);
-                    setTech(response.data);
-                    setAttention(response.data);
-                });
+                attention,
+                tech
+            };
+            addLog(newLog);
+            M.toast({ html: `Log added by ${tech}` });
 
             //Clear fields
             setDescription('');
@@ -107,4 +105,4 @@ const modalStyle = {
     height: "75%"
 };
 
-export default AddLog;
+export default connect(null, { addLog })(AddLog);

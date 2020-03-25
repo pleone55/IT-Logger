@@ -1,29 +1,29 @@
 import React from 'react';
 import Moment from 'react-moment';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { deleteLog, setCurrent } from '../../actions/logActions';
+import M from 'materialize-css/dist/js/materialize.min.js';
 
-const LogItem = ({ log, removeFromDom }) => {
+const LogItem = ({ log, deleteLog, setCurrent }) => {
 
-    const deleteLogs = logId => {
-        axios.delete('http://localhost:7000/api/logs/' + logId)
-            .then(response => {
-                removeFromDom(logId)
-            });
+    const onDelete = () => {
+        deleteLog(log._id);
+        M.toast({ html: 'Log deleted'})
     };
 
     return (
         <li className="collection-item">
             <div>
                 <a href="#edit-log-modal" className={`modal-trigger ${log.attention ? 
-                    'red-text' : 'blue-text'}`}>{log.description}</a>
+                    'red-text' : 'blue-text'}`} onClick={() => setCurrent(log)}>{log.description}</a>
                     <br/>
                 <span className="grey-text">
                     Last updated by: <span className="black-text">{log.tech}</span> on <Moment format="MMMM Do YYYY, 
-                    h:mm:ss a">{log.created_at}</Moment>
+                    h:mm:ss a">{log.updated_at}</Moment>
                 </span>
-                <a href="#!" className="secondary-content" onClick={() => deleteLogs(log._id)}><i className="material-icons grey-text">delete</i></a>
+                <a href="#!" className="secondary-content" onClick={onDelete}><i className="material-icons grey-text">delete</i></a>
             </div>
         </li>
     )
 }
-export default LogItem;
+export default connect(null, { deleteLog, setCurrent })(LogItem);
