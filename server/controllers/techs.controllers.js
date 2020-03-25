@@ -13,12 +13,6 @@ module.exports.getTechs = (req, res) => {
         .catch(err => res.json(err));
 }
 
-module.exports.updateTech = (req, res) => {
-    Tech.findByIdAndUpdate({ _id: req.params.id}, req.body, {new: true})
-        .then(tech => res.json(tech))
-        .catch(err => res.json(err));
-}
-
 module.exports.deleteTech = (req, res) => {
     Tech.deleteOne({ _id: req.params.id})
         .then(deleteTech => res.json(deleteTech))
