@@ -1,26 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import M from 'materialize-css/dist/js/materialize.min.js';
 import { addLog } from '../../actions/logActions';
-import axios from 'axios';
+import TechSelectOptions from '../techs/TechSelectOptions';
+import M from 'materialize-css/dist/js/materialize.min.js';
 
 const AddLog = ({ addLog }) => {
     const [description, setDescription] = useState('');
     const [attention, setAttention] = useState(false);
     const [tech, setTech] = useState('');
-    const [techs, setTechs] = useState([]);
-
-    useEffect(() => {
-        getTechs();
-        //eslint-disable-next-line
-    }, []);
-
-    const getTechs = () => {
-        axios.get('http://localhost:7000/api/techs')
-            .then(response => {
-                setTechs(response.data);
-            })
-    }
 
     const onSubmit = e => {
         e.preventDefault();
@@ -65,9 +52,7 @@ const AddLog = ({ addLog }) => {
                             className="browser-default" 
                             onChange={e => setTech(e.target.value)}>
                                 <option value="" disabled>Select Technician</option>
-                                {techs.map(tech => (
-                                    <option key={tech._id}>{tech.firstName} {tech.lastName}</option>
-                                ))}
+                                <TechSelectOptions/>
                             </select>
                     </div>
                 </div>

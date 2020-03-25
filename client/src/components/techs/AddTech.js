@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { addTech } from '../../actions/techActions';
 import M from 'materialize-css/dist/js/materialize.min.js';
-import axios from 'axios';
 
-const AddTech = () => {
+const AddTech = ({ addTech }) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
 
@@ -10,10 +11,11 @@ const AddTech = () => {
         if(firstName === '' || lastName === ''){
             M.toast({ html: "Please enter the tech's first and last name" });
         } else {
-            axios.post('http://localhost:7000/api/techs', {
-                firstName, lastName
-            })
-                .then(response => response.data)
+            addTech({
+                firstName,
+                lastName
+            });
+            M.toast({ html: `${firstName} ${lastName} was added as a technician` })
 
             //Clear fields
             setFirstName('');
@@ -59,4 +61,5 @@ const AddTech = () => {
         </div>
     )
 };
-export default AddTech;
+
+export default connect(null, { addTech })(AddTech);

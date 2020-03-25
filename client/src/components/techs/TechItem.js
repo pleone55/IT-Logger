@@ -1,24 +1,22 @@
 import React from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { deleteTech } from '../../actions/techActions';
+import M from 'materialize-css/dist/js/materialize.min.js';
 
-const TechItem = ({ tech, removeFromDom }) => {
-
-    const deleteLogs = techId => {
-        axios.delete('http://localhost:7000/api/techs/' + techId)
-            .then(response => {
-                removeFromDom(techId)
-            });
-    };
-
+const TechItem = ({ tech: { _id, firstName, lastName }, deleteTech }) => {
+    const onDelete = () => {
+        deleteTech(_id);
+        M.toast({ html: 'Technician deleted'});
+    }
     return (
         <li className="collection-item">
             <div>
-                {tech.firstName} {tech.lastName}
-                <a href="#!" className="secondary-content" onClick={() => deleteLogs(tech._id)}>
+                {firstName} {lastName}
+                <a href="#!" className="secondary-content" onClick={onDelete}>
                     <i className="material-icons grey-text">delete</i>
                 </a>
             </div>
         </li>
     )
 }
-export default TechItem;
+export default connect(null, { deleteTech })(TechItem);
